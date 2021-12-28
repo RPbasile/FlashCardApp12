@@ -1,70 +1,76 @@
 import React, { useEffect } from 'react'
-import { useParams, useHistory } from 
-"react-router-dom";
-import CardForm from "./CardForm";
-import { readDeck, readCard, updateCard } from '../utils/api/index'; 
+import { useParams, useHistory } from 'react-router-dom';
+import { readDeck, updateDeck } from '../utils/api/index'; 
 
-function EditCard({ deck, setDeck, card, setCard }) {
-  const { deckId, cardId } = useParams();
+function EditDeck({ deck, setDeck }) {
   const history = useHistory();
+  const { deckId } = useParams();
 
   useEffect(() => {
-    async function loadDeck() {
+    async function loadDecks() {
       const loadedDeck = await readDeck(deckId);
-      setDeck(loadedDeck)
+      setDeck(loadedDeck);
     }
-    loadDeck();
+    loadDecks();
   }, [deckId, setDeck]);
 
-  useEffect(() => {
-    async function loadCard() {
-      const cardRead = await readCard(cardId);
-      setCard(cardRead)
-       }
-      loadCard();
-    }, [cardId, setCard]);
-
-    function changeFront(event){
-      setCard({ ...card, front: event.target.value })
-    }
-    
-    function changeBack(event){
-      setCard({ ...card, back: event.target.value })
-    }
-
-  function handleSave (event) {
-    event.preventDefault();
-    updateCard(card).then((response) => history.push(`/decks/${deck.id}`))
+  function changeName(event){
+    setDeck({ ...deck, name: event.target.value })
+  }
+  
+  function changeDesc(event){
+    setDeck({ ...deck, description: event.target.value })
   }
 
-  function handleDone() {
+  function saveHandler (event) {
+    event.preventDefault();
+    updateDeck(deck).then((response) => history.push(`/decks/${deck.id}`))
+  }
+
+  function handleCancel() {
     history.push(`/decks/${deck.id}`)
   }
 
   return (
     <div>
-      <div>
+    <div>
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><a href="/">Home</a></li>
-          <li className="breadcrumb-item"><a href={`/decks/${deck.id}`}>{deck.name}</a></li>
-          <li className="breadcrumb-item active" aria-current="page">Edit Card {cardId}</li>
+          <li className="breadcrumb-item"><a href={`/decks/${deckId}`}>{deck.name}</a></li>
+          <li className="breadcrumb-item active" aria-current="page">Edit Deck</li>
         </ol>
       </nav>
     </div>
-    <div>
-    <h1>Edit Card</h1>
-    <CardForm 
-          changeFront={changeFront}
-          changeBack={changeBack}
-          handleSave={handleSave}
-          handleDoneCancel={handleDone}
-          cardValueFront={card.front}
-          cardValueBack={card.back}
-        />
-  </div>
-  </div>
+     <div>
+     <form>
+     <h1>Edit Deck</h1>
+   <div className="mb-3">
+     <label 
+     className="form-label">Name</label>
+     <textarea
+       type="text" className="form-control" 
+       id="front"
+       value={deck.name}
+       onChange={changeName}
+       rows="3"/> 
+   </div>
+   <div className="mb-3">
+     <label className="form-label">Description</label>
+     <textarea className="form-control" id="back"
+     value={deck.description}
+     onChange={changeDesc}
+     rows="3"
+     />
+   </div>
+ 
+   <button type="submit" className="btn btn-primary" onClick={handleCancel}>Cancel</button>
+ 
+   <button type="submit" className="btn btn-primary" onClick={saveHandler} >Save</button>
+   </form>
+   </div>
+   </div>
   )
 }
 
-export default EditCard;
+export default EditDeck

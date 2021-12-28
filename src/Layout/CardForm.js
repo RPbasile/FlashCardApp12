@@ -29,4 +29,4 @@ function CardForm({ changeFront, changeBack, handleSave, handleDoneCancel, cardV
     );
   }
 
-  export default CardForm;
+  export default CardForm

@@ -40,4 +40,4 @@ function Deck({ deck }) {
   )
 };
 
-export default Deck;
+export default Deck

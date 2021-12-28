@@ -66,4 +66,4 @@ function CreateDeck() {
   )
 }
 
-export default CreateDeck;
+export default CreateDeck
